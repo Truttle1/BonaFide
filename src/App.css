@@ -1,0 +1,18 @@
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+  width: 90%;
+}
+
+.text-editor {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.textHL {
+	background-color: #eeeeee !important;
+}
+
+.textHL2 {
+	background-color: #000000 !important;
+}

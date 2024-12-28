@@ -22,7 +22,6 @@ function App() {
   });
 
   const [output, setOutput] = useState("");
-  const [running, setRunning] = useState(false);
   const [stepping, setStepping] = useState(false);
   const [waitingOnInput, setWaitingOnInput] = useState(false);
   const [input, setInput] = useState("");
@@ -79,13 +78,11 @@ function App() {
     editorRef.current.updateOptions({ readOnly: true });
     if(editorRef.current != null) {
       setStepping(false);
-      setRunning(true);
       bf.current.setCode(editorRef.current.getValue());
       bf.current.interpret();
       setOutput(bf.current.getOutput());
       setNodes(bf.current.getNodes());
       if(!bf.current.interrupted()) {
-        setRunning(false);
         editorRef.current.updateOptions({ readOnly: false });
       } else if(bf.current.interrupted()) {
         setWaitingOnInput(true);
@@ -99,7 +96,6 @@ function App() {
   function stepBF() {
     if(editorRef.current != null) {
       editorRef.current.updateOptions({ readOnly: true });
-      setRunning(true);
       setStepping(true);
       bf.current.setCode(editorRef.current.getValue());
       if(decorations.current) {
@@ -119,7 +115,6 @@ function App() {
       }
 
       if(bf.current.getDone()) {
-        setRunning(false);
         setStepping(false);
         editorRef.current.updateOptions({ readOnly: false });
       }
@@ -129,7 +124,6 @@ function App() {
   }
 
   function resetBF() {
-    setRunning(false);
     setOutput("");
     setWaitingOnInput(false);
     editorRef.current.updateOptions({ readOnly: false });
@@ -152,7 +146,6 @@ function App() {
       setOutput(bf.current.getOutput());
       if(!bf.current.interrupted()) {
         editorRef.current.updateOptions({ readOnly: false });
-        setRunning(false);
       } else if(bf.current.interrupted()) {
         setWaitingOnInput(true);
       }

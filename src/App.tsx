@@ -74,7 +74,10 @@ function App() {
   }
 
   function runBF() {
-    bf.current = new BFInterpreter("");
+
+    if(!stepping) {
+      bf.current = new BFInterpreter("");
+    }
     editorRef.current.updateOptions({ readOnly: true });
     if(editorRef.current != null) {
       setStepping(false);
@@ -117,6 +120,7 @@ function App() {
       if(bf.current.getDone()) {
         setStepping(false);
         editorRef.current.updateOptions({ readOnly: false });
+        setWaitingOnInput(false);
       }
       setOutput(bf.current.getOutput());
       setNodes(bf.current.getNodes());
@@ -134,10 +138,10 @@ function App() {
     setNodes(bf.current.getNodes());
   }
 
-  function sendInput() {
+  function sendInput(step: boolean) {
     bf.current.addInput(input);
     setWaitingOnInput(false);
-    if(stepping) {
+    if(step) {
       stepBF();
     }
     else {
@@ -154,6 +158,16 @@ function App() {
         decorations.current.clear();
       }
     }
+  }
+
+  function sendInputStep() {
+    setStepping(true);
+    sendInput(true);
+  }
+
+  function sendInputRun() {
+    setStepping(false);
+    sendInput(false);
   }
 
   return (
@@ -194,8 +208,7 @@ function App() {
     <hr></hr>
     <h2><u>MEMORY</u></h2>
     The cell currently pointed to has a <b style={{color: "green"}}>green</b> outline. The initial cell 0 has a <b style={{color: "blue"}}>blue</b> outline.
-    <Stack spacing={1} direction="row" sx={{justifyContent: 'center', flexWrap: 'wrap'}} 
-      useFlexGap>
+    <Stack spacing={1} direction="row" sx={{justifyContent: 'center', flexWrap: 'wrap'} } useFlexGap key={"stackKey"}>
       { nodes.map((node) => {
 
         if(node == null) {
@@ -209,14 +222,16 @@ function App() {
           color = 'green';
         }
         return(
-          <Box component="section" sx={{ p: 2, border: '4px solid ' + color, boxShadow: 4, width: 36, height: 36, }}>
-          <Box component="section" sx={{fontWeight: "bold", fontSize: "16pt", display: 'flex', justifyContent: 'center', alignItems: 'top',}}>
-            {node.data}
+          <span key={node.id}>
+            <Box component="section" sx={{ p: 2, border: '4px solid ' + color, boxShadow: 4, width: 36, height: 36, }}>
+            <Box component="section" sx={{fontWeight: "bold", fontSize: "16pt", display: 'flex', justifyContent: 'center', alignItems: 'top',}}>
+              {node.data}
+            </Box>
+            <Box component="section" sx={{display: 'flex', justifyContent: 'center'}}>
+              "{String.fromCharCode(node.data)}"
+            </Box>
           </Box>
-          <Box component="section" sx={{display: 'flex', justifyContent: 'center'}}>
-            "{String.fromCharCode(node.data)}"
-          </Box>
-        </Box>
+        </span>
         )
         })
       }
@@ -227,7 +242,7 @@ function App() {
     <ThemeProvider theme={outputTheme}>
       <h2><u>OUTPUT</u></h2>
       <Box sx={{fontFamily: "Consolas, Courier New", fontWeight: 'bold', marginTop: '2vh', backgroundColor: '#d4d4d4', boxShadow: 4}}>
-        {output.split("\n").map(str => <p>{str}</p>)}
+        {output.split("\n").map((str, i) => <p key={`out-${i}`}>{str}</p>)}
       </Box>
       <h2><u>INPUT</u></h2>
       <Stack spacing={2} direction="row">
@@ -235,7 +250,8 @@ function App() {
           onChange={(e) => {
             setInput(e.target.value);
           }}/>
-        <Button variant="contained" onClick={sendInput} disabled={!waitingOnInput}>Send</Button>
+          <Button variant="contained" onClick={sendInputRun} disabled={!waitingOnInput}>Send and Run</Button>
+          <Button variant="contained" onClick={sendInputStep} disabled={!waitingOnInput}>Send and Step</Button>
       </Stack>
     </ThemeProvider>
     

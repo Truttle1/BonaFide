@@ -2,14 +2,17 @@ class DataNode {
     public left: DataNode | null = null;
     public right: DataNode | null = null;
     public data : number = 0;
-    constructor(data: number) {
+    public id: number;
+    constructor(data: number, id: number = 0) {
         this.data = data;
+        this.id = id;
     }
 }
 
 export class BFInterpreter {
     private code: string = "";
-    private pointer: DataNode = new DataNode(0);
+    private pointer: DataNode = new DataNode(0, 0);
+    private dataNodeId = 1;
     private loopStack: Array<number> = [];
     private codePointer: number = 0;
     private inputBuffer: string = "";
@@ -57,7 +60,8 @@ export class BFInterpreter {
             }
             case '>': {
                 if(this.pointer.right == null) {
-                    let newNode = new DataNode(0);
+                    let newNode = new DataNode(0, this.dataNodeId);
+                    this.dataNodeId += 1;
                     newNode.left = this.pointer;
                     this.pointer.right = newNode;
                 } 
@@ -66,7 +70,8 @@ export class BFInterpreter {
             }
             case '<': {
                 if(this.pointer.left == null) {
-                    let newNode = new DataNode(0);
+                    let newNode = new DataNode(0, this.dataNodeId);
+                    this.dataNodeId += 1;
                     newNode.right = this.pointer;
                     this.pointer.left = newNode;
                     if(this.pointer == this.leftMostNode) {

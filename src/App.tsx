@@ -144,6 +144,7 @@ function App() {
       editorRef.current.updateOptions({ readOnly: true });
       bf.current.interpret();
       setOutput(bf.current.getOutput());
+      setNodes(bf.current.getNodes());
       if(!bf.current.interrupted()) {
         editorRef.current.updateOptions({ readOnly: false });
       } else if(bf.current.interrupted()) {

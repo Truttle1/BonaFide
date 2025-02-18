@@ -117,7 +117,7 @@ export class BFInterpreter {
                     this.needsMoreInput = true;
                     return;
                 }
-                this.pointer.data = this.inputBuffer.charCodeAt(0);
+                this.pointer.data = this.inputBuffer.charCodeAt(0) % 256;
                 this.inputBuffer = this.inputBuffer.substring(1);
                 break;
             }

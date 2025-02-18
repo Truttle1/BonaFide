@@ -239,7 +239,7 @@ function App() {
 
     <ThemeProvider theme={outputTheme}>
       <h2><u>OUTPUT</u></h2>
-      <Box sx={{fontFamily: "Consolas, Courier New", fontWeight: 'bold', marginTop: '2vh', backgroundColor: '#d4d4d4', boxShadow: 4}}>
+      <Box sx={{fontFamily: "Consolas, Courier New", fontWeight: 'bold', marginTop: '2vh', backgroundColor: '#d4d4d4', boxShadow: 4, wordWrap: 'break-word'}}>
         {output.split("\n").map((str, i) => <p key={`out-${i}`}>{str}</p>)}
       </Box>
       <h2><u>INPUT</u></h2>

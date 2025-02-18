@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo } from 'react';
 import { BFInterpreter } from './bf';
 import { IPosition } from 'monaco-editor';
 import { TextField } from '@mui/material';
@@ -13,13 +13,11 @@ function App() {
   const initialRef: any = null;
   const editorRef = useRef(initialRef);
   const monacoRef = useRef(initialRef);
-  const outputTheme = createTheme({
+  const outputTheme = useMemo(() => createTheme({
     typography: {
-      fontFamily: [
-        'Consolas, Courier New',
-      ].join(','),
+      fontFamily: ['Consolas', 'Courier New'].join(','),
     },
-  });
+  }), []);
 
   const [output, setOutput] = useState("");
   const [stepping, setStepping] = useState(false);

@@ -20,6 +20,7 @@ export class BFInterpreter {
     private needsMoreInput: boolean = false;
     private leftMostNode: DataNode = this.pointer;
     private centerNode: DataNode = this.pointer;
+    private numInstrs: number = 99999999;
 
     constructor(code: string) {
         this.code = code;
@@ -132,12 +133,17 @@ export class BFInterpreter {
     }
 
     interpret() {
-        while(this.codePointer < this.code.length && !this.needsMoreInput) {
+        while(this.codePointer < this.code.length && !this.needsMoreInput && this.numInstrs > 0) {
+            this.numInstrs--;
             this.interpreterStep();
         }
 
         if(this.codePointer == this.code.length) {
             this.codePointer = 0;
+        }
+
+        if(this.numInstrs == 0) {
+            this.output += "\n(TIMED OUT)";
         }
     }
 
